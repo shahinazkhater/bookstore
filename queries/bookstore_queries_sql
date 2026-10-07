@@ -1,0 +1,90 @@
+SELECT authors.name,
+count(books.id)as total_books
+from authors
+LEFT JOIN 
+books ON authors.id = books.author_id
+group by authors.id, authors.name;
+---------------
+
+SELECT authors.id,authors.name ,count(books.id)
+from authors
+join books ON authors.id = books.author_id
+group by authors.id, authors.name
+having count(books.id)>3;
+---------------------
+
+select  country ,count(*) as authors_count
+from authors
+group by country
+having count(*)>1;
+
+
+select customers.name, sum( order_item.cost)as total_order_price 
+from customers
+join orders on
+ customers.id= orders.customer_id
+ join order_item
+ on orders.id= order_item.order_id
+group by customers.name
+order by total_order_price desc
+limit 5;
+
+
+select customers.name, sum( order_item.cost)as total_order_price 
+from customers
+join orders on
+ customers.id= orders.customer_id
+ join order_item
+ on orders.id= order_item.order_id
+group by customers.name
+
+having  sum( order_item.cost)>100;
+--------------------------------------
+
+select customers.name 
+from customers
+ left join orders on
+ customers.id= orders.customer_id
+where orders.customer_id is null;
+ ----------------------------------------------
+
+select books.id ,books.title
+from books
+ left join order_item on
+books.id= order_item .book_id
+where order_item.book_id is null;
+----------------------------------------------
+
+select books.id ,books.title,
+sum(order_item.quantity)as total_sold
+from books
+join order_item on book_id= order_item.book_id
+group by books.id ,books.title
+order by total_sold desc
+ limit 5;
+-----------------------------------------------------
+
+SELECT authors.country,
+       SUM(order_item.quantity) AS total_sold
+FROM authors
+JOIN books
+    ON authors.id = books.author_id
+JOIN order_item
+    ON books.id = order_item.book_id
+GROUP BY authors.country;
+
+-------------------------------------------
+SELECT customers.id,
+       customers.name,
+       COUNT(orders.id) AS order_count
+FROM customers
+LEFT JOIN orders
+    ON customers.id = orders.customer_id
+GROUP BY customers.id, customers.name
+HAVING COUNT(orders.id) < 2;
+------------------------------------------
+SELECT order_item.order_id,
+       COUNT(DISTINCT order_item.book_id) AS different_books
+FROM order_item
+GROUP BY order_item.order_id
+HAVING COUNT(DISTINCT order_item.book_id) >= 3;
